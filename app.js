@@ -9,7 +9,7 @@ app.listen(PORT, () => {
 });
 
 // URL de connexion à MongoDB
-const uri = 'mongodb+srv://admin:admin@testmongodb.fisbrtj.mongodb.net/todolist';
+const uri = DB_URL;
 
 mongoose.connect(uri, {
     useNewUrlParser: true, // Options de connexion supplémentaires si nécessaire
