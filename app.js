@@ -33,3 +33,5 @@ app.use(bodyParser.json())
 app.use('/', userRouter)
 app.use('/', authRouter)
 app.use('/', taskRouter)
+
+module.exports = app;

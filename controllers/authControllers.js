@@ -2,7 +2,9 @@ const { v4: uuidv4 } = require('uuid')
 require('dotenv').config()
 const User = require('../model/user')
 const bcrypt = require('bcryptjs')
+const Task = require('../model/task')
 const jwt = require('jsonwebtoken');
+
 
 exports.success = (message, data) => {
     return{message, data}
@@ -60,14 +62,14 @@ module.exports = {
                 const username = user
                 bcrypt.compare(req.body.password, user.password)
 
-                    .then(valid => {
+                    .then(async valid => {
                         if (!valid) {
-                            return res.status(401).json({ message: 'Paire login/mot de passe incorrecte' });
+                            return res.status(401).json({message: 'Paire login/mot de passe incorrecte'});
                         }
                         const token = jwt.sign(
-                            { userId: user._id }, // Ajout de l'ID de l'utilisateur ici
+                            {userId: user._id}, // Ajout de l'ID de l'utilisateur ici
                             'RANDOM_TOKEN_SECRET',
-                            { expiresIn: '24h' }
+                            {expiresIn: '24h'}
                         );
                         const options = {
                             method: "GET",
@@ -77,11 +79,13 @@ module.exports = {
                             }
                         };
 
+                        const userId = user._id
+                        const tasks = await Task.find({ userId }).sort({ createdAt: 1 });
+
                         res.status(200).json({
                             token,
                             message: `Bonjour ${user.name}`,
-                            tasks: 'task list'
-
+                            tasks: tasks
                         });
                     })
                     .catch(error => {

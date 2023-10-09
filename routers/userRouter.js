@@ -6,5 +6,3 @@ exports.router = (()=>{
     authRouter.route('/showAllSlots').get( checkIfLogged)
     return authRouter
 })()
-
-

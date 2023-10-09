@@ -51,9 +51,9 @@ module.exports = {
 
 
     },
-    showAllTasks(req,res){
+    showTasksInProgress(req,res){
         const userId = req.userId;
-        Task.find({ userId: userId })
+        Task.find({ userId: userId, completed: false })
             .then(tasks => {
                 req.userTasks = tasks;
                 const jsonResponse = { tasks: tasks };
@@ -89,7 +89,6 @@ module.exports = {
                 res.status(500).json({ message: "Erreur 500 lors de la recherche de la tâche" });
             });
     },
-    // Middleware pour modifier une tâche par son ID
     editTask(req, res) {
     const taskId = req.params.id; // Récupère l'ID de la tâche depuis les paramètres d'URL
 
