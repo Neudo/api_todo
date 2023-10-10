@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const app = require('../app')
 const User = require('../model/user')
-beforeEach( async () => {await User.deleteMany()})
 test('Should signup a new user', async () => {
     const response = await request(app).post('/register')
         .send({
@@ -19,14 +18,18 @@ test('Should signup a new user', async () => {
 
 
 test('Should login a new user', async () => {
-    const response = await request(app).post('/login')
-        .send({
-            email:"dhriti@test.com",
-            password:"1234567890"
-        })
-    const token = response.body.token
-    const decoded = jwt.decode(token)
-    expect(response.body.message).toBeDefined()
-    expect(decoded.email).toBe('dhriti@test.com')
-    expect(decoded.iat).toBeDefined()
-})
+    const userData = {
+        email: "dhriti@test.com",
+        password: "1234567890"
+    };
+
+    const response = await request(app)
+        .post('/login')
+        .send(userData);
+
+    expect(response.status).toBe(200);
+    expect(response.body.token).toBeDefined();
+    const decoded = jwt.decode(response.body.token);
+    expect(decoded.userId).toBeDefined();
+    expect(response.body.message).toBe("Bonjour dhriti");
+});
